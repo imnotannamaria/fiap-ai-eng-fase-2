@@ -5,8 +5,6 @@ import json
 import sys
 from pathlib import Path
 
-import pandas as pd
-
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
@@ -39,13 +37,14 @@ def main() -> None:
 
     # O teste permanece fechado durante a busca: ele é usado apenas uma vez aqui,
     # após escolher a melhor configuração pela validação.
-    x_train_final = pd.concat([x_train, x_val], ignore_index=True)
-    y_train_final = pd.concat([y_train, y_val], ignore_index=True)
+    # O baseline da Fase 1 também foi treinado só no split de treino. Mantemos
+    # essa condição para que o comparativo não misture o efeito do GA com o de
+    # acrescentar mais dados ao ajuste final.
     _, baseline_test = fit_and_evaluate(
         args.model,
         baseline_params(args.model),
-        x_train_final,
-        y_train_final,
+        x_train,
+        y_train,
         x_test,
         y_test,
         random_state=42,
@@ -53,8 +52,8 @@ def main() -> None:
     _, optimized_test = fit_and_evaluate(
         args.model,
         best["best_params"],
-        x_train_final,
-        y_train_final,
+        x_train,
+        y_train,
         x_test,
         y_test,
         random_state=42,

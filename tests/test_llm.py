@@ -25,4 +25,6 @@ def test_grounding_check_rejects_hallucinated_or_incomplete_response():
     )
 
     assert not _is_grounded("Probabilidade de 82.0% para triagem de cães.", context)
-    assert _is_grounded("82.0% com texture_worst como fator relevante.", context)
+    assert not _is_grounded("82.0% com limiar 0.24 e texture_worst como fator relevante.", context)
+    assert not _is_grounded("82.0% para suspeita e texture_worst como fator relevante.", context)
+    assert _is_grounded("82.0% com limiar 0.24 para suspeita e texture_worst como fator relevante.", context)

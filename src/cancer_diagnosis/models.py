@@ -16,8 +16,7 @@ def build_model(model_name: str, params: dict[str, Any], random_state: int):
     params = {key: value for key, value in params.items() if key != "threshold"}
     if model_name == "logistic_regression":
         classifier = LogisticRegression(
-            max_iter=2000,
-            solver="liblinear",
+            max_iter=1000,
             random_state=random_state,
             **params,
         )

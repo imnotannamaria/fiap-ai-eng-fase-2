@@ -1,6 +1,7 @@
 """Cliente local do Ollama e prompt seguro para explicar uma predição."""
 
 import json
+import os
 from dataclasses import dataclass
 from typing import Any
 from urllib.error import URLError
@@ -41,9 +42,9 @@ class PredictionContext:
 class OllamaClient:
     """Cliente mínimo para uma LLM local; não envia dados para serviços externos."""
 
-    def __init__(self, model: str = "qwen2.5:0.5b", base_url: str = "http://localhost:11434"):
+    def __init__(self, model: str = "qwen2.5:0.5b", base_url: str | None = None):
         self.model = model
-        self.base_url = base_url.rstrip("/")
+        self.base_url = (base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/")
 
     def explain(self, context: PredictionContext, timeout: int = 120) -> str:
         payload = json.dumps(
@@ -82,6 +83,8 @@ def _is_grounded(response: str, context: PredictionContext) -> bool:
     unsafe_terms = ("cães", "prescri", "tratamento", "medicamento", "diagnóstico definitivo")
     return (
         f"{context.probability_malignant:.1%}" in response
+        and context.predicted_label.lower() in normalized
+        and f"{context.threshold:.2f}" in response
         and all(item["feature"].lower() in normalized for item in context.top_features)
         and not any(term in normalized for term in unsafe_terms)
     )

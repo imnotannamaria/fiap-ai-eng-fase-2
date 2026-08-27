@@ -46,20 +46,20 @@ Foram executadas três configurações reprodutíveis para cada modelo, variando
 | Regressão Logística | Exp. 3 | 85,5% | 100,0% | 83,9% | 0 | 0,9766 |
 | Random Forest | Exp. 2 | 95,7% | 96,2% | 94,3% | 1 | 0,9595 |
 
-A configuração selecionada para a Regressão Logística foi `C=0,0502`, `class_weight='balanced'` e limiar `0,2393`. Para a Random Forest, foram selecionados 89 estimadores, profundidade máxima 20, `min_samples_split=14`, `min_samples_leaf=2`, `max_features='sqrt'`, `class_weight='balanced'` e limiar `0,3187`.
+A configuração selecionada para a Regressão Logística foi `C=0,0349`, `class_weight='balanced'` e limiar `0,2393`. Para a Random Forest, foram selecionados 89 estimadores, profundidade máxima 20, `min_samples_split=14`, `min_samples_leaf=2`, `max_features='sqrt'`, `class_weight='balanced'` e limiar `0,3187`.
 
 ## 4. Comparativo final no teste
 
-O teste foi mantido fechado durante a busca genética. Depois de escolher o melhor experimento com a validação, cada modelo foi treinado com treino + validação e avaliado uma única vez no teste.
+O teste foi mantido fechado durante a busca genética. Depois de escolher o melhor experimento com a validação, baseline e modelo otimizado foram treinados com o mesmo conjunto de treino e avaliados uma única vez no teste. A validação foi usada só para escolher os hiperparâmetros.
 
 | Modelo | Versão | Accuracy | Recall maligno | Precisão maligna | F1 maligno | Falsos negativos |
 |---|---|---:|---:|---:|---:|---:|
 | Regressão Logística | Baseline | 97,4% | 95,2% | 97,6% | 96,4% | 2 |
-| Regressão Logística | Otimizada | 93,9% | **100,0%** | 85,7% | 92,3% | **0** |
+| Regressão Logística | Otimizada | 93,0% | **100,0%** | 84,0% | 91,3% | **0** |
 | Random Forest | Baseline | 97,4% | 92,9% | 100,0% | 96,3% | 3 |
-| Random Forest | Otimizada | 95,6% | 95,2% | 93,0% | 94,1% | 2 |
+| Random Forest | Otimizada | 96,5% | 97,6% | 93,2% | 95,3% | 1 |
 
-A Regressão Logística otimizada é a melhor configuração para o critério definido: eliminou os dois falsos negativos do baseline entre os 42 casos malignos do teste. A redução de accuracy e precisão indica mais falsos positivos, um custo que deve ser revisado por um profissional, mas que é clinicamente menos grave para um sistema de triagem. A Random Forest também reduziu falsos negativos de 3 para 2, porém não alcançou o recall da Regressão Logística otimizada.
+A Regressão Logística otimizada é a melhor configuração para o critério definido: eliminou os dois falsos negativos do baseline entre os 42 casos malignos do teste. A redução de accuracy e precisão indica mais falsos positivos, um custo que deve ser revisado por um profissional, mas que é clinicamente menos grave para um sistema de triagem. A Random Forest também reduziu falsos negativos de 3 para 1, porém não alcançou o recall da Regressão Logística otimizada.
 
 ## 5. LLM para interpretação
 
