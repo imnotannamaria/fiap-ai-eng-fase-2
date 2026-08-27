@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cancer-diagnosis-api
+  labels:
+    app: cancer-diagnosis-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cancer-diagnosis-api
+  template:
+    metadata:
+      labels:
+        app: cancer-diagnosis-api
+    spec:
+      containers:
+        - name: api
+          image: IMAGE_PLACEHOLDER
+          command: ["uvicorn"]
+          args: ["cancer_diagnosis.api:app", "--app-dir", "src", "--host", "0.0.0.0", "--port", "8000"]
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cancer-diagnosis-api
+spec:
+  selector:
+    app: cancer-diagnosis-api
+  ports:
+    - port: 80
+      targetPort: 8000
